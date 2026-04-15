@@ -18,7 +18,7 @@ struct GitLabTodosApp: App {
         .menuBarExtraStyle(.window)
 
         Settings {
-            PlaceholderSettingsView()
+            SettingsView(monitor: monitor)
         }
 
         Window("Setup", id: "onboarding") {
@@ -68,14 +68,7 @@ struct GitLabTodosApp: App {
     }
 }
 
-// MARK: - Placeholders (replaced by Task #7 / Task #8)
-
-private struct PlaceholderSettingsView: View {
-    var body: some View {
-        Text("Settings (coming soon)")
-            .padding(40)
-    }
-}
+// MARK: - Placeholders (replaced by Task #8)
 
 private struct PlaceholderOnboardingView: View {
     let monitor: TodoMonitorService
