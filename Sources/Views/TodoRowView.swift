@@ -3,6 +3,7 @@ import SwiftUI
 
 struct TodoRowView: View {
     let todo: Todo
+    let currentUsername: String?
     let onMarkDone: () -> Void
     let onOpen: () -> Void
 
@@ -20,18 +21,21 @@ struct TodoRowView: View {
 
             AvatarView(url: todo.author.avatarURL, size: 32)
 
-            VStack(alignment: .leading, spacing: 2) {
-                Text(todo.displayTitle)
-                    .font(.body.weight(.semibold))
-                    .lineLimit(2)
-                    .truncationMode(.tail)
+            VStack(alignment: .leading, spacing: 3) {
+                HStack(alignment: .firstTextBaseline, spacing: 6) {
+                    TodoBadgeView(todo: todo)
+                    Text(todo.displayTitle)
+                        .font(.body.weight(.semibold))
+                        .lineLimit(2)
+                        .truncationMode(.tail)
+                }
 
                 Text(todo.project.pathWithNamespace)
                     .font(.caption)
                     .foregroundStyle(.secondary)
                     .lineLimit(1)
 
-                Text(actionLine)
+                ActionDescriptionText(todo: todo, currentUsername: currentUsername)
                     .font(.caption)
                     .foregroundStyle(.secondary)
                     .lineLimit(2)
@@ -66,15 +70,5 @@ struct TodoRowView: View {
                 Text("menu.action.copyURL", tableName: "Menu")
             }
         }
-    }
-
-    /// Placeholder until TodoRowView gets the rich ActionDescriptionText in
-    /// the next commit. For now, show "<author name> · <raw action>".
-    private var actionLine: String {
-        let action = todo.actionName.rawValue.replacingOccurrences(of: "_", with: " ")
-        if todo.author.name.isEmpty {
-            return action
-        }
-        return "\(todo.author.name) · \(action)"
     }
 }

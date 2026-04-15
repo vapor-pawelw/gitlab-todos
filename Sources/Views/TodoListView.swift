@@ -106,6 +106,7 @@ struct TodoListView: View {
                     ForEach(monitor.visibleTodos) { todo in
                         TodoRowView(
                             todo: todo,
+                            currentUsername: monitor.glab.currentUsername,
                             onMarkDone: { Task { await monitor.markDone(todo) } },
                             onOpen: { NSWorkspace.shared.open(todo.targetURL) }
                         )
