@@ -26,9 +26,28 @@ struct TodoListView: View {
         }
         .frame(width: 420, height: 560)
         .task {
-            if monitor.lastRefresh == nil && monitor.settings.onboardingCompleted {
-                await monitor.refreshNow()
-            }
+            await performFirstLaunchIfNeeded()
+        }
+    }
+
+    private func performFirstLaunchIfNeeded() async {
+        if monitor.glab.glabPath == nil {
+            monitor.glab.glabPath = await OnboardingDetector.findGlabExecutable()
+            monitor.settings.glabPath = monitor.glab.glabPath
+        }
+        await monitor.glab.recheck()
+        monitor.settings.glabPath = monitor.glab.glabPath
+        monitor.settings.resolvedHost = monitor.glab.resolvedHost
+        monitor.settings.save()
+
+        if !monitor.settings.onboardingCompleted {
+            NSApplication.shared.activate(ignoringOtherApps: true)
+            openWindow(id: "onboarding")
+            return
+        }
+
+        if monitor.lastRefresh == nil {
+            monitor.start()
         }
     }
 
