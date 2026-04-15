@@ -3,6 +3,7 @@ import SwiftUI
 
 struct TodoListView: View {
     @Bindable var monitor: TodoMonitorService
+    let updates: UpdateService
     @Environment(\.openWindow) private var openWindow
     @Environment(\.openSettings) private var openSettings
 
@@ -43,7 +44,16 @@ struct TodoListView: View {
         if !monitor.settings.onboardingCompleted {
             NSApplication.shared.activate(ignoringOtherApps: true)
             openWindow(id: "onboarding")
+            updates.seedIfNeeded()
             return
+        }
+
+        if updates.shouldShowWhatsNew {
+            updates.loadWhatsNew()
+            NSApplication.shared.activate(ignoringOtherApps: true)
+            openWindow(id: "whats-new")
+        } else {
+            updates.seedIfNeeded()
         }
 
         if monitor.lastRefresh == nil {
