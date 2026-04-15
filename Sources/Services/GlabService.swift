@@ -1,6 +1,7 @@
 import Foundation
 import Observation
 
+@MainActor
 @Observable
 final class GlabService {
     /// Path to the resolved `glab` executable. Set by `OnboardingDetector` / `recheck()`.
@@ -139,17 +140,17 @@ final class GlabService {
 
     // MARK: - Pure helpers (used by the service and tests)
 
-    static func decodeTodos(_ data: Data) throws -> [Todo] {
+    nonisolated static func decodeTodos(_ data: Data) throws -> [Todo] {
         let decoder = JSONDecoder()
-        let formatter = ISO8601DateFormatter()
-        formatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
-        let fallback = ISO8601DateFormatter()
-        fallback.formatOptions = [.withInternetDateTime]
         decoder.dateDecodingStrategy = .custom { decoder in
             let container = try decoder.singleValueContainer()
             let raw = try container.decode(String.self)
-            if let d = formatter.date(from: raw) { return d }
-            if let d = fallback.date(from: raw) { return d }
+            let primary = ISO8601DateFormatter()
+            primary.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
+            if let date = primary.date(from: raw) { return date }
+            let fallback = ISO8601DateFormatter()
+            fallback.formatOptions = [.withInternetDateTime]
+            if let date = fallback.date(from: raw) { return date }
             throw DecodingError.dataCorruptedError(
                 in: container,
                 debugDescription: "Invalid ISO8601 date: \(raw)"
@@ -158,7 +159,7 @@ final class GlabService {
         return try decoder.decode([Todo].self, from: data)
     }
 
-    static func parseHost(from url: URL?) -> String? {
+    nonisolated static func parseHost(from url: URL?) -> String? {
         guard let url, let host = url.host, !host.isEmpty else { return nil }
         return host
     }
