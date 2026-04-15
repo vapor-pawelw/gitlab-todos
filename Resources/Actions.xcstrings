@@ -1,277 +1,266 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
-    "menu.badge.state.closed" : {
+    "action.added_approvers.%@" : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Closed"
+            "value" : "%@ added approvers."
           }
         }
       }
     },
-    "menu.badge.state.draft" : {
+    "action.added_approvers.you" : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Draft"
+            "value" : "You were added as an approver."
           }
         }
       }
     },
-    "menu.badge.state.merged" : {
+    "action.approval_required.%@" : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Merged"
+            "value" : "%@ set you as an approver."
           }
         }
       }
     },
-    "menu.badge.state.open" : {
+    "action.approval_required.you" : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Open"
+            "value" : "You set yourself as an approver."
           }
         }
       }
     },
-    "menu.badge.state.reopened" : {
+    "action.assigned.%@" : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Reopened"
+            "value" : "%@ assigned this to you."
           }
         }
       }
     },
-    "menu.action.copyURL" : {
+    "action.assigned.you" : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Copy URL"
+            "value" : "You assigned this to yourself."
           }
         }
       }
     },
-    "menu.action.markAsDone" : {
+    "action.build_failed" : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Mark as done"
+            "value" : "The pipeline failed."
           }
         }
       }
     },
-    "menu.action.openInBrowser" : {
+    "action.directly_addressed.%@" : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Open in browser"
+            "value" : "%@ mentioned you directly."
           }
         }
       }
     },
-    "menu.action.quit" : {
+    "action.directly_addressed.you" : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Quit"
+            "value" : "You mentioned yourself directly."
           }
         }
       }
     },
-    "menu.action.settings" : {
+    "action.marked.%@" : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Settings…"
+            "value" : "%@ added a to-do."
           }
         }
       }
     },
-    "menu.empty.subtitle" : {
+    "action.marked.you" : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Nothing needs your attention."
+            "value" : "You added a to-do."
           }
         }
       }
     },
-    "menu.empty.title" : {
+    "action.member_access_requested.%@" : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Inbox zero"
+            "value" : "%@ requested access."
           }
         }
       }
     },
-    "menu.error.decoding.%@" : {
+    "action.member_access_requested.you" : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Couldn't read the glab response: %@"
+            "value" : "You requested access."
           }
         }
       }
     },
-    "menu.error.generic.%@" : {
+    "action.mentioned.%@" : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Couldn't fetch to-dos: %@"
+            "value" : "%@ mentioned you."
           }
         }
       }
     },
-    "menu.error.glabNotInstalled" : {
+    "action.mentioned.you" : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "glab is not installed. Open Setup to install it."
+            "value" : "You mentioned yourself."
           }
         }
       }
     },
-    "menu.error.network.%@" : {
+    "action.merge_train_removed" : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Network error: %@"
+            "value" : "Removed from the merge train."
           }
         }
       }
     },
-    "menu.error.notAuthenticated" : {
+    "action.okr_checkin_requested.%@" : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "glab isn't signed in. Open Setup to authenticate."
+            "value" : "%@ requested an OKR check-in."
           }
         }
       }
     },
-    "menu.error.openSetup" : {
+    "action.okr_checkin_requested.you" : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Open Setup…"
+            "value" : "You requested an OKR check-in."
           }
         }
       }
     },
-    "menu.error.timedOut" : {
+    "action.review_requested.%@" : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "glab took too long to respond."
+            "value" : "%@ requested a review."
           }
         }
       }
     },
-    "menu.footer.pendingCount.%lld" : {
+    "action.review_requested.you" : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "%lld pending"
+            "value" : "You requested a review from yourself."
           }
         }
       }
     },
-    "menu.header.neverUpdated" : {
+    "action.review_submitted.%@" : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Never updated"
+            "value" : "%@ reviewed your merge request."
           }
         }
       }
     },
-    "menu.header.openInBrowser.tooltip" : {
+    "action.review_submitted.you" : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Open GitLab To-Dos in browser"
+            "value" : "You reviewed your merge request."
           }
         }
       }
     },
-    "menu.header.refresh.tooltip" : {
+    "action.unknown.%@" : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Refresh"
+            "value" : "%@ updated this."
           }
         }
       }
     },
-    "menu.header.title" : {
+    "action.unmergeable" : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "GitLab To-Dos"
-          }
-        }
-      }
-    },
-    "menu.header.updated.%@" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Updated %@"
+            "value" : "Could not merge."
           }
         }
       }
