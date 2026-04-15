@@ -30,7 +30,10 @@ let project = Project(
                 "NSHumanReadableCopyright": .string("Copyright © 2026 vaporpw. MIT License."),
             ]),
             sources: ["Sources/**"],
-            resources: ["Resources/**"]
+            resources: [
+                "Resources/**",
+                "CHANGELOG.md",
+            ]
         ),
         .target(
             name: "GitLabTodosTests",
