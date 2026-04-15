@@ -1,0 +1,39 @@
+{
+  "sourceLanguage" : "en",
+  "strings" : {
+    "notifications.batch.body" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Open the menu bar app to review them."
+          }
+        }
+      }
+    },
+    "notifications.batch.title.%lld" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld new GitLab to-dos"
+          }
+        }
+      }
+    },
+    "notifications.single.title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "New GitLab to-do"
+          }
+        }
+      }
+    }
+  },
+  "version" : "1.0"
+}
