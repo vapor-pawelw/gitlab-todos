@@ -30,6 +30,29 @@ final class TodoMonitorService {
         // glab wrapper survives a cold launch without needing onboarding.
         self.glab.glabPath = settings.glabPath
         self.glab.resolvedHost = settings.resolvedHost
+
+        Task { [weak self] in
+            await self?.bootstrap()
+        }
+    }
+
+    /// Runs at app launch: probes glab, refreshes persisted state, and kicks
+    /// off the first fetch + polling timer if onboarding is already done so
+    /// the menu bar count reflects the real inbox without waiting for the
+    /// user to open the dropdown.
+    func bootstrap() async {
+        if glab.glabPath == nil {
+            glab.glabPath = await OnboardingDetector.findGlabExecutable()
+            settings.glabPath = glab.glabPath
+        }
+        await glab.recheck()
+        settings.glabPath = glab.glabPath
+        settings.resolvedHost = glab.resolvedHost
+        settings.save()
+
+        if settings.onboardingCompleted, lastRefresh == nil {
+            start()
+        }
     }
 
     // MARK: - Derived state

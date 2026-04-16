@@ -35,15 +35,6 @@ struct TodoListView: View {
     }
 
     private func performFirstLaunchIfNeeded() async {
-        if monitor.glab.glabPath == nil {
-            monitor.glab.glabPath = await OnboardingDetector.findGlabExecutable()
-            monitor.settings.glabPath = monitor.glab.glabPath
-        }
-        await monitor.glab.recheck()
-        monitor.settings.glabPath = monitor.glab.glabPath
-        monitor.settings.resolvedHost = monitor.glab.resolvedHost
-        monitor.settings.save()
-
         if !monitor.settings.onboardingCompleted {
             NSApplication.shared.activate(ignoringOtherApps: true)
             openWindow(id: "onboarding")
@@ -57,10 +48,6 @@ struct TodoListView: View {
             openWindow(id: "whats-new")
         } else {
             updates.seedIfNeeded()
-        }
-
-        if monitor.lastRefresh == nil {
-            monitor.start()
         }
     }
 
