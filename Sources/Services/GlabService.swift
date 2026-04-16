@@ -7,19 +7,34 @@ final class GlabService {
     /// Path to the resolved `glab` executable. Set by `OnboardingDetector` / `recheck()`.
     var glabPath: URL?
 
-    /// Authenticated user's `username`, set on successful `recheck()`.
+    /// Username on the default host, set only when that host is authenticated.
     var currentUsername: String?
-
-    /// Authenticated user's `name`, set on successful `recheck()`.
-    var currentUserDisplayName: String?
 
     /// Resolved GitLab host, e.g. `"gitlab.com"` or a self-hosted instance.
     var resolvedHost: String?
+
+    /// All hosts glab reports as logged in.
+    var authedHosts: [AuthedHost] = []
+
+    /// Authentication state relative to the default host.
+    var authStatus: AuthStatus = .unknown
 
     /// Dashboard URL for "Open in browser" links in the menu header.
     var dashboardTodosURL: URL? {
         guard let resolvedHost else { return nil }
         return URL(string: "https://\(resolvedHost)/dashboard/todos")
+    }
+
+    struct AuthedHost: Sendable, Equatable, Hashable {
+        let host: String
+        let username: String
+    }
+
+    enum AuthStatus: Sendable, Equatable {
+        case unknown
+        case authenticated
+        case wrongDefaultHost(authedHosts: [AuthedHost])
+        case notAuthenticated
     }
 
     // MARK: - Commands
@@ -74,38 +89,38 @@ final class GlabService {
         return .success(())
     }
 
-    /// Refreshes `currentUsername`, `currentUserDisplayName` and `resolvedHost`.
-    /// Returns the first hard error encountered so the caller can surface it.
+    /// Refreshes `resolvedHost`, `authedHosts`, `authStatus` and `currentUsername`
+    /// by parsing `glab auth status`. Returns a hard error only when we can't
+    /// reach glab at all; the "wrong default host" and "not authenticated"
+    /// cases are surfaced via `authStatus`, not as thrown errors.
     @discardableResult
     func recheck() async -> GlabError? {
-        guard let glabPath else { return .glabNotInstalled }
+        guard let glabPath else {
+            authStatus = .notAuthenticated
+            return .glabNotInstalled
+        }
 
-        // Host (non-fatal: fall back to parsing target_url later).
         if let host = await resolveHost(executable: glabPath) {
             resolvedHost = host
         }
 
-        // Current user.
-        let userOutput: ProcessRunner.Output
-        do {
-            userOutput = try await ProcessRunner.run(
-                glabPath,
-                arguments: ["api", "/user"],
-                environment: Self.shellEnvironment,
-                timeout: 15
-            )
-        } catch ProcessRunner.RunError.timedOut {
-            return .timedOut
-        } catch {
-            return .unknown(String(describing: error))
+        authedHosts = await probeAuthedHosts(executable: glabPath)
+
+        if let defaultHost = resolvedHost,
+           let entry = authedHosts.first(where: { $0.host == defaultHost }) {
+            currentUsername = entry.username
+            authStatus = .authenticated
+            return nil
         }
-        guard userOutput.exitCode == 0 else {
-            return GlabError.classify(exitCode: userOutput.exitCode, stderr: userOutput.stderr)
+
+        currentUsername = nil
+
+        if authedHosts.isEmpty {
+            authStatus = .notAuthenticated
+            return nil
         }
-        if let decoded = try? JSONDecoder().decode(CurrentUser.self, from: userOutput.stdout) {
-            currentUsername = decoded.username
-            currentUserDisplayName = decoded.name
-        }
+
+        authStatus = .wrongDefaultHost(authedHosts: authedHosts)
         return nil
     }
 
@@ -126,6 +141,23 @@ final class GlabService {
             .trimmingCharacters(in: .whitespacesAndNewlines)
         guard let host, !host.isEmpty else { return nil }
         return host
+    }
+
+    private func probeAuthedHosts(executable: URL) async -> [AuthedHost] {
+        let output: ProcessRunner.Output
+        do {
+            output = try await ProcessRunner.run(
+                executable,
+                arguments: ["auth", "status"],
+                environment: Self.shellEnvironment,
+                timeout: 10
+            )
+        } catch {
+            return []
+        }
+        // glab writes the status report to stderr; parse both streams just in case.
+        let stdoutString = String(data: output.stdout, encoding: .utf8) ?? ""
+        return Self.parseAuthedHosts(from: output.stderr + "\n" + stdoutString)
     }
 
     /// Backfills `resolvedHost` from a fetched todo's `target_url` when
@@ -164,6 +196,30 @@ final class GlabService {
         return host
     }
 
+    /// Parses `Logged in to <host> as <username>` lines out of `glab auth status`
+    /// output. Deduplicates on host, preserving the first occurrence.
+    nonisolated static func parseAuthedHosts(from text: String) -> [AuthedHost] {
+        guard let regex = try? NSRegularExpression(pattern: #"Logged in to (\S+) as (\S+)"#) else {
+            return []
+        }
+        var seen = Set<String>()
+        var results: [AuthedHost] = []
+        for raw in text.split(whereSeparator: { $0.isNewline }) {
+            let line = String(raw)
+            let range = NSRange(line.startIndex..., in: line)
+            guard let match = regex.firstMatch(in: line, range: range),
+                  match.numberOfRanges >= 3,
+                  let hostRange = Range(match.range(at: 1), in: line),
+                  let userRange = Range(match.range(at: 2), in: line)
+            else { continue }
+            let host = String(line[hostRange])
+            if seen.insert(host).inserted {
+                results.append(AuthedHost(host: host, username: String(line[userRange])))
+            }
+        }
+        return results
+    }
+
     private static var shellEnvironment: [String: String] {
         var env: [String: String] = [
             "PATH": "/opt/homebrew/bin:/usr/local/bin:/opt/local/bin:/usr/bin:/bin",
@@ -180,10 +236,5 @@ final class GlabService {
             }
         }
         return env
-    }
-
-    private struct CurrentUser: Decodable {
-        let username: String
-        let name: String
     }
 }

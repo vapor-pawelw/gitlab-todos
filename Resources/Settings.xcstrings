@@ -122,6 +122,17 @@
         }
       }
     },
+    "settings.integration.auth.wrongHost.%@" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Signed in to %@ (not default host)"
+          }
+        }
+      }
+    },
     "settings.integration.auth.row" : {
       "extractionState" : "manual",
       "localizations" : {

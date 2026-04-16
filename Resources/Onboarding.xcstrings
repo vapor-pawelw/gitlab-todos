@@ -56,6 +56,50 @@
         }
       }
     },
+    "onboarding.auth.wrongHost.body.%@" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "You're signed in to %@, but GitLab To-Dos reads from glab's default host."
+          }
+        }
+      }
+    },
+    "onboarding.auth.wrongHost.currentDefault.%@" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Current default: %@"
+          }
+        }
+      }
+    },
+    "onboarding.auth.wrongHost.instruction" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Switch glab's default host, then re-check:"
+          }
+        }
+      }
+    },
+    "onboarding.auth.wrongHost.title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Signed in to a different host"
+          }
+        }
+      }
+    },
     "onboarding.back" : {
       "extractionState" : "manual",
       "localizations" : {

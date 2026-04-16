@@ -84,15 +84,24 @@ struct IntegrationSettingsTab: View {
 
     @ViewBuilder
     private var authValue: some View {
-        if let username = monitor.glab.currentUsername {
+        switch monitor.glab.authStatus {
+        case .authenticated:
             Text(
                 String(
                     format: String(localized: "settings.integration.auth.authenticated.%@", table: "Settings"),
-                    username
+                    monitor.glab.currentUsername ?? ""
                 )
             )
             .foregroundStyle(.secondary)
-        } else {
+        case .wrongDefaultHost(let hosts):
+            Text(
+                String(
+                    format: String(localized: "settings.integration.auth.wrongHost.%@", table: "Settings"),
+                    hosts.map(\.host).joined(separator: ", ")
+                )
+            )
+            .foregroundStyle(.orange)
+        case .notAuthenticated, .unknown:
             Text("settings.integration.auth.notAuthenticated", tableName: "Settings")
                 .foregroundStyle(.red)
         }

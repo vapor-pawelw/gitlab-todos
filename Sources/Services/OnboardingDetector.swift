@@ -36,53 +36,6 @@ enum OnboardingDetector {
         return URL(fileURLWithPath: trimmed)
     }
 
-    struct AuthProbe: Sendable {
-        let isAuthenticated: Bool
-        let username: String?
-        let displayName: String?
-    }
-
-    /// Runs `glab auth status` and, when successful, follows up with
-    /// `glab api /user` to surface the signed-in identity.
-    static func checkGlabAuth(executable: URL) async -> AuthProbe {
-        let status: ProcessRunner.Output
-        do {
-            status = try await ProcessRunner.run(
-                executable,
-                arguments: ["auth", "status"],
-                environment: minimalShellEnvironment,
-                timeout: 10
-            )
-        } catch {
-            return AuthProbe(isAuthenticated: false, username: nil, displayName: nil)
-        }
-        guard status.exitCode == 0 else {
-            return AuthProbe(isAuthenticated: false, username: nil, displayName: nil)
-        }
-
-        let user: ProcessRunner.Output
-        do {
-            user = try await ProcessRunner.run(
-                executable,
-                arguments: ["api", "/user"],
-                environment: minimalShellEnvironment,
-                timeout: 10
-            )
-        } catch {
-            return AuthProbe(isAuthenticated: true, username: nil, displayName: nil)
-        }
-        guard user.exitCode == 0,
-              let decoded = try? JSONDecoder().decode(UserPayload.self, from: user.stdout)
-        else {
-            return AuthProbe(isAuthenticated: true, username: nil, displayName: nil)
-        }
-        return AuthProbe(
-            isAuthenticated: true,
-            username: decoded.username,
-            displayName: decoded.name
-        )
-    }
-
     static func checkNotificationPermission() async -> UNAuthorizationStatus {
         await UNUserNotificationCenter.current().notificationSettings().authorizationStatus
     }
@@ -98,10 +51,5 @@ enum OnboardingDetector {
             }
         }
         return env
-    }
-
-    private struct UserPayload: Decodable {
-        let username: String
-        let name: String
     }
 }
