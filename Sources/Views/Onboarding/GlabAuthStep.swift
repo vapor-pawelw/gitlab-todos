@@ -125,7 +125,7 @@ struct GlabAuthStep: View {
                 .foregroundStyle(.secondary)
 
             if let primary {
-                CommandBox(command: "glab config set host \(primary.host)")
+                CommandBox(command: "glab config set host \(primary.host) --global")
             }
         }
     }
