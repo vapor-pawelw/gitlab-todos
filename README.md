@@ -23,7 +23,7 @@ Requires **macOS 14+** and [**glab**](https://gitlab.com/gitlab-org/cli) authent
 
 ## Menu bar inbox
 
-The menu-bar icon shows a count of pending to-dos. Clicking it opens a rich dropdown that mirrors the GitLab web todo list: avatar, author name, action description, project path, target title, state badge (Draft / Open / Merged / Closed) and relative time. Click a row to open it in your browser, or use the inline checkbox to mark it as done via the GitLab API — rows disappear immediately and are restored if the call fails.
+The menu-bar icon shows a count of pending to-dos and a small red dot whenever unseen to-dos have arrived since you last opened the dropdown. Clicking it opens a rich dropdown that mirrors the GitLab web todo list: avatar, author name, action description, project path, target title, state badge (Draft / Open / Merged / Closed) and relative time. Click a row to open it in your browser, or use the inline checkbox to mark it as done via the GitLab API — rows disappear immediately and are restored if the call fails.
 
 ## Native notifications
 
