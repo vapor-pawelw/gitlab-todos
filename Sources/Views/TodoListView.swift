@@ -5,7 +5,6 @@ struct TodoListView: View {
     @Bindable var monitor: TodoMonitorService
     let updates: UpdateService
     @Environment(\.openWindow) private var openWindow
-    @Environment(\.openSettings) private var openSettings
 
     var body: some View {
         VStack(spacing: 0) {
@@ -127,7 +126,10 @@ struct TodoListView: View {
                             todo: todo,
                             currentUsername: monitor.glab.currentUsername,
                             onMarkDone: { Task { await monitor.markDone(todo) } },
-                            onOpen: { NSWorkspace.shared.open(todo.targetURL) }
+                            onOpen: {
+                                NSWorkspace.shared.open(todo.targetURL)
+                                dismissMenuBarExtra()
+                            }
                         )
                         Divider()
                     }
@@ -149,9 +151,7 @@ struct TodoListView: View {
 
             Spacer()
 
-            Button {
-                openSettings()
-            } label: {
+            SettingsLink {
                 Text("menu.action.settings", tableName: "Menu")
             }
             .buttonStyle(.borderless)
@@ -167,5 +167,14 @@ struct TodoListView: View {
         }
         .padding(.horizontal, 14)
         .padding(.vertical, 8)
+    }
+
+    private func dismissMenuBarExtra() {
+        for window in NSApplication.shared.windows {
+            let className = String(describing: type(of: window))
+            if className.contains("MenuBarExtra") || className.contains("NSPopover") {
+                window.orderOut(nil)
+            }
+        }
     }
 }
