@@ -1,0 +1,179 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+env:
+  RELEASE_REPO: vapor-pawelw/gitlab-todos
+  APP_NAME: GitLabTodos
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: macos-14
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Install mise
+        uses: jdx/mise-action@v2
+        with:
+          install: true
+
+      - name: Extract version from tag
+        id: version
+        run: |
+          VERSION="${GITHUB_REF#refs/tags/v}"
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          echo "tag=v$VERSION" >> "$GITHUB_OUTPUT"
+          echo "Building ${APP_NAME} ${VERSION}"
+
+      - name: Inject version into Project.swift
+        run: |
+          VERSION="${{ steps.version.outputs.version }}"
+          BUILD="${{ github.run_number }}"
+          sed -i '' -E 's|("CFBundleShortVersionString": \.string\()"[^"]+"(\))|\1"'"$VERSION"'"\2|' Project.swift
+          sed -i '' -E 's|("CFBundleVersion": \.string\()"[^"]+"(\))|\1"'"$BUILD"'"\2|' Project.swift
+          grep CFBundle Project.swift
+
+      - name: Build release artifacts
+        run: mise x -- bash scripts/build-release.sh "${{ steps.version.outputs.version }}"
+
+      - name: Rename artifacts to stable names
+        run: |
+          VERSION="${{ steps.version.outputs.version }}"
+          cp "release/${APP_NAME}-${VERSION}.dmg" "${APP_NAME}.dmg"
+          cp "release/${APP_NAME}-${VERSION}.zip" "${APP_NAME}.zip"
+
+      - name: Create GitHub Release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          TAG="${{ steps.version.outputs.tag }}"
+          VERSION="${{ steps.version.outputs.version }}"
+          NOTES_FILE=$(mktemp)
+          trap 'rm -f "$NOTES_FILE"' EXIT
+          HAS_NOTES=false
+
+          # Preferred source: exact version section from CHANGELOG.md.
+          if [ -f CHANGELOG.md ]; then
+            if awk -v version="$VERSION" '
+              BEGIN { in_version = 0; found = 0 }
+              $0 ~ ("^## " version " - ") {
+                in_version = 1
+                found = 1
+                print
+                next
+              }
+              /^## / {
+                if (in_version == 1) {
+                  exit
+                }
+              }
+              in_version == 1 {
+                print
+              }
+              END {
+                if (found == 0) {
+                  exit 2
+                }
+              }
+            ' CHANGELOG.md > "$NOTES_FILE"; then
+              if [ -s "$NOTES_FILE" ]; then
+                HAS_NOTES=true
+              fi
+            else
+              : > "$NOTES_FILE"
+            fi
+          fi
+
+          # Fallback: annotated tag message, when present.
+          if [ "$HAS_NOTES" != "true" ]; then
+            TAG_OBJECT_TYPE="$(git cat-file -t "refs/tags/${TAG}" 2>/dev/null || true)"
+            if [ "$TAG_OBJECT_TYPE" = "tag" ]; then
+              git for-each-ref "refs/tags/${TAG}" --format='%(contents)' > "$NOTES_FILE"
+              if [ -s "$NOTES_FILE" ]; then
+                HAS_NOTES=true
+              fi
+            fi
+          fi
+
+          if gh release view "$TAG" --repo "$RELEASE_REPO" > /dev/null 2>&1; then
+            if [ "$HAS_NOTES" = "true" ]; then
+              gh release edit "$TAG" --repo "$RELEASE_REPO" --notes-file "$NOTES_FILE"
+            fi
+            gh release upload "$TAG" --repo "$RELEASE_REPO" --clobber "${APP_NAME}.dmg" "${APP_NAME}.zip"
+          elif [ "$HAS_NOTES" = "true" ]; then
+            gh release create "$TAG" \
+              --repo "$RELEASE_REPO" \
+              --title "$TAG" \
+              --notes-file "$NOTES_FILE" \
+              "${APP_NAME}.dmg" "${APP_NAME}.zip"
+          else
+            gh release create "$TAG" \
+              --repo "$RELEASE_REPO" \
+              --title "$TAG" \
+              --generate-notes \
+              "${APP_NAME}.dmg" "${APP_NAME}.zip"
+          fi
+
+  # Updates the Homebrew tap only if HOMEBREW_TAP_TOKEN is configured.
+  # Without the token this job fails on checkout, so guard on the secret being
+  # present by checking a dummy env var that the repo owner sets alongside it.
+  update-cask:
+    needs: build
+    runs-on: ubuntu-latest
+    if: ${{ vars.HOMEBREW_TAP_ENABLED == 'true' }}
+    steps:
+      - name: Wait for release assets
+        run: sleep 10
+
+      - name: Get release info
+        id: release
+        run: |
+          TAG="${GITHUB_REF#refs/tags/}"
+          VERSION="${TAG#v}"
+          ASSET_URL="https://github.com/${{ env.RELEASE_REPO }}/releases/download/${TAG}/GitLabTodos.dmg"
+          echo "tag=$TAG" >> "$GITHUB_OUTPUT"
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          echo "asset_url=$ASSET_URL" >> "$GITHUB_OUTPUT"
+
+      - name: Download release asset and compute SHA256
+        id: sha
+        run: |
+          curl -sSL "${{ steps.release.outputs.asset_url }}" -o GitLabTodos.dmg
+          SHA=$(sha256sum GitLabTodos.dmg | awk '{print $1}')
+          echo "sha256=$SHA" >> "$GITHUB_OUTPUT"
+          echo "SHA256: $SHA"
+
+      - name: Checkout homebrew-tap
+        uses: actions/checkout@v4
+        with:
+          repository: vapor-pawelw/homebrew-tap
+          token: ${{ secrets.HOMEBREW_TAP_TOKEN }}
+          path: homebrew-tap
+
+      - name: Update cask formula
+        run: |
+          VERSION="${{ steps.release.outputs.version }}"
+          SHA="${{ steps.sha.outputs.sha256 }}"
+          ASSET_URL="${{ steps.release.outputs.asset_url }}"
+          sed -i "s/version \".*\"/version \"$VERSION\"/" homebrew-tap/Casks/gitlab-todos.rb
+          sed -i "s/sha256 \".*\"/sha256 \"$SHA\"/" homebrew-tap/Casks/gitlab-todos.rb
+          sed -i "s|url \".*\".*|url \"$ASSET_URL\"|" homebrew-tap/Casks/gitlab-todos.rb
+          cat homebrew-tap/Casks/gitlab-todos.rb
+
+      - name: Commit and push cask update
+        working-directory: homebrew-tap
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add Casks/gitlab-todos.rb
+          git commit -m "Update gitlab-todos to ${{ steps.release.outputs.version }}"
+          git push

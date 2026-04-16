@@ -9,9 +9,17 @@
 
 ## Install
 
+**Homebrew (recommended):**
+
+```sh
+brew install --cask vapor-pawelw/tap/gitlab-todos
+```
+
+`glab` is pulled in automatically as a dependency. After install, run `glab auth login` once to sign in.
+
 **Manual:** grab the `.dmg` from [Releases](https://github.com/vapor-pawelw/gitlab-todos/releases).
 
-Requires **macOS 14+**, [**glab**](https://gitlab.com/gitlab-org/cli) (`brew install glab`) authenticated with `glab auth login`.
+Requires **macOS 14+** and [**glab**](https://gitlab.com/gitlab-org/cli) authenticated with `glab auth login`.
 
 ## Menu bar inbox
 
