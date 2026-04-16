@@ -4,19 +4,12 @@ struct MenuBarLabel: View {
     let monitor: TodoMonitorService
 
     var body: some View {
-        HStack(spacing: 4) {
-            Image(systemName: symbolName)
-            if monitor.settings.onboardingCompleted,
-               monitor.lastError == nil,
-               monitor.badgeCount > 0
-            {
-                Text("\(monitor.badgeCount)")
-            }
+        if monitor.lastError != nil {
+            Label("\(monitor.badgeCount)", systemImage: "exclamationmark.triangle")
+        } else if monitor.settings.onboardingCompleted {
+            Label("\(monitor.badgeCount)", image: "todo-done")
+        } else {
+            Image("todo-done")
         }
-    }
-
-    private var symbolName: String {
-        if monitor.lastError != nil { return "exclamationmark.triangle" }
-        return "checklist"
     }
 }
