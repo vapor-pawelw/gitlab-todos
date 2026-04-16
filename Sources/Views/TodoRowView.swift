@@ -12,9 +12,9 @@ struct TodoRowView: View {
     var body: some View {
         HStack(alignment: .top, spacing: 10) {
             Button(action: onMarkDone) {
-                Image(systemName: isHovered ? "checkmark.circle.fill" : "circle")
+                Image(systemName: "circle")
                     .font(.title3)
-                    .foregroundStyle(isHovered ? Color.accentColor : .secondary)
+                    .foregroundStyle(.secondary)
             }
             .buttonStyle(.plain)
             .help(Text("menu.action.markAsDone", tableName: "Menu"))
@@ -35,17 +35,19 @@ struct TodoRowView: View {
                     .foregroundStyle(.secondary)
                     .lineLimit(1)
 
-                ActionDescriptionText(todo: todo, currentUsername: currentUsername)
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
-                    .lineLimit(2)
+                HStack(alignment: .firstTextBaseline, spacing: 6) {
+                    ActionDescriptionText(todo: todo, currentUsername: currentUsername)
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                        .lineLimit(2)
+                    Spacer(minLength: 4)
+                    Text(RelativeTime.string(from: todo.createdAt))
+                        .font(.caption2)
+                        .foregroundStyle(.secondary)
+                        .fixedSize()
+                }
             }
             .frame(maxWidth: .infinity, alignment: .leading)
-
-            Text(RelativeTime.string(from: todo.createdAt))
-                .font(.caption2)
-                .foregroundStyle(.secondary)
-                .fixedSize()
         }
         .padding(.horizontal, 12)
         .padding(.vertical, 10)
