@@ -42,6 +42,12 @@ final class TodoMonitorService {
 
     var badgeCount: Int { visibleTodos.count }
 
+    var hasUnseenTodos: Bool {
+        guard !visibleTodos.isEmpty else { return false }
+        guard let lastOpened = settings.lastMenuOpenedAt else { return false }
+        return visibleTodos.contains { $0.createdAt > lastOpened }
+    }
+
     var dashboardURL: URL {
         glab.dashboardTodosURL ?? URL(string: "https://gitlab.com/dashboard/todos")!
     }
@@ -66,6 +72,11 @@ final class TodoMonitorService {
     func stopTimer() {
         timer?.invalidate()
         timer = nil
+    }
+
+    func markMenuOpened() {
+        settings.lastMenuOpenedAt = Date()
+        settings.save()
     }
 
     // MARK: - Commands

@@ -13,6 +13,7 @@ final class SettingsManager {
     var glabPath: URL?
     var resolvedHost: String?
     var launchAtLoginPreference: Bool
+    var lastMenuOpenedAt: Date?
 
     init(defaults: UserDefaults = .standard) {
         self.defaults = defaults
@@ -24,6 +25,10 @@ final class SettingsManager {
         self.onboardingCompleted = defaults.bool(forKey: Key.onboardingCompleted)
         self.launchAtLoginPreference = defaults.bool(forKey: Key.launchAtLoginPreference)
         self.resolvedHost = defaults.string(forKey: Key.resolvedHost)
+        let storedMenuOpenedAt = defaults.double(forKey: Key.lastMenuOpenedAt)
+        self.lastMenuOpenedAt = storedMenuOpenedAt > 0
+            ? Date(timeIntervalSince1970: storedMenuOpenedAt)
+            : nil
 
         if let pathString = defaults.string(forKey: Key.glabPath), !pathString.isEmpty {
             self.glabPath = URL(fileURLWithPath: pathString)
@@ -58,6 +63,11 @@ final class SettingsManager {
         if let data = try? JSONEncoder().encode(Array(lastSeenTodoIDs).sorted()) {
             defaults.set(data, forKey: Key.lastSeenTodoIDs)
         }
+        if let lastMenuOpenedAt {
+            defaults.set(lastMenuOpenedAt.timeIntervalSince1970, forKey: Key.lastMenuOpenedAt)
+        } else {
+            defaults.removeObject(forKey: Key.lastMenuOpenedAt)
+        }
     }
 
     var isFirstLaunch: Bool {
@@ -87,5 +97,6 @@ final class SettingsManager {
         static let resolvedHost = "resolvedHost"
         static let launchAtLoginPreference = "launchAtLoginPreference"
         static let hasLaunchedBefore = "hasLaunchedBefore"
+        static let lastMenuOpenedAt = "lastMenuOpenedAt"
     }
 }

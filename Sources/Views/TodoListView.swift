@@ -29,6 +29,9 @@ struct TodoListView: View {
         .task {
             await performFirstLaunchIfNeeded()
         }
+        .onAppear {
+            monitor.markMenuOpened()
+        }
     }
 
     private func performFirstLaunchIfNeeded() async {
