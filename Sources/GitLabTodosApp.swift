@@ -13,7 +13,7 @@ struct GitLabTodosApp: App {
         } label: {
             if monitor.lastError != nil {
                 Image(systemName: "exclamationmark.triangle")
-                Text("\(monitor.badgeCount)")
+                Text(" \(monitor.badgeCount)")
             } else if monitor.settings.onboardingCompleted {
                 Image("todo-done")
                     .overlay(alignment: .bottomTrailing) {
@@ -24,7 +24,7 @@ struct GitLabTodosApp: App {
                                 .offset(x: 1, y: 1)
                         }
                     }
-                Text("\(monitor.badgeCount)")
+                Text(" \(monitor.badgeCount)")
             } else {
                 Image("todo-done")
             }
