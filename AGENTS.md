@@ -82,7 +82,7 @@ Resources/
   Settings.xcstrings
   Onboarding.xcstrings
   Notifications.xcstrings
-  Localizable.xcstrings    # generic only (save, cancel, ok, quit, …)
+                           # (no Localizable.xcstrings — create only if a truly generic key appears)
 Tests/
   *Tests.swift             # Swift Testing
   Fixtures/                # JSON payloads captured from `glab api`
@@ -90,11 +90,13 @@ Tests/
 
 ## Localization
 
-- Use **per-feature `.xcstrings`** catalogs. Do not dump feature strings into `Localizable.xcstrings`.
-- `Localizable.xcstrings` is for truly generic keys whose name fits any caller (`common.save`, `common.cancel`, `common.ok`). Never reuse a key named after a different feature.
-- In SwiftUI: `Text("menu.header.title", tableName: "Menu")`. In non-`Text` contexts: `String(localized: "notifications.single.title", table: "Notifications")`.
+- Use **per-feature `.xcstrings`** catalogs (`Menu`, `Actions`, `Settings`, `Onboarding`, `Notifications`). There is no `Localizable.xcstrings` — only add one if a truly generic key (`common.save`, `common.ok`) ever appears, and never reuse a key named after a different feature.
+- `STRING_CATALOG_GENERATE_SYMBOLS = YES` is on and every entry must have `"extractionState": "manual"` so Xcode emits a `LocalizedStringResource.<Table>.<camelCaseKey>` symbol per entry. Call sites use those symbols — no raw keys, no `table:` argument:
+  - SwiftUI: `Text(.Menu.menuHeaderTitle)`
+  - Non-`Text` contexts: `String(localized: .Notifications.notificationsSingleTitle)`
+  - Format specifiers become function parameters: `Text(.Menu.menuFooterPendingCount(count))`
+  - For dynamic keys (e.g. enum-driven lookup), expose a `LocalizedStringResource` property on the enum that switches to the right generated symbol — don't fall back to `NSLocalizedString(key, tableName:)` unless the key truly can't be known at compile time (see `ActionDescriptionText` for the one remaining runtime-dispatch case).
 - `defaultLocalization: "en"`. No other languages are shipped in v1, but the infrastructure is in place.
-- `STRING_CATALOG_GENERATE_SYMBOLS = YES` is on, so xcstrings entries become generated Swift symbols. Prefer those when you want compile-time safety.
 
 ## Settings / persistence
 
