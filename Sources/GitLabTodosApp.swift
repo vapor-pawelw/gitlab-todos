@@ -15,7 +15,7 @@ struct GitLabTodosApp: App {
                 Image(systemName: "exclamationmark.triangle")
                 Text("\(monitor.badgeCount)")
             } else if monitor.settings.onboardingCompleted {
-                Image("todo-done")
+                Image(monitor.badgeCount == 0 ? "todo-done-clear" : "todo-done")
                     .overlay(alignment: .bottomTrailing) {
                         if monitor.hasUnseenTodos {
                             Circle()
