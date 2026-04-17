@@ -30,6 +30,7 @@ struct TodoListView: View {
         }
         .onAppear {
             monitor.markMenuOpened()
+            Task { await monitor.refreshNow() }
         }
     }
 
