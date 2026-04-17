@@ -8,14 +8,14 @@ struct LaunchAtLoginStep: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 16) {
-            Text("onboarding.launchAtLogin.title", tableName: "Onboarding")
+            Text(.Onboarding.onboardingLaunchAtLoginTitle)
                 .font(.title3.weight(.semibold))
 
-            Text("onboarding.launchAtLogin.body", tableName: "Onboarding")
+            Text(.Onboarding.onboardingLaunchAtLoginBody)
                 .foregroundStyle(.secondary)
 
             Toggle(isOn: toggleBinding) {
-                Text("onboarding.launchAtLogin.toggle", tableName: "Onboarding")
+                Text(.Onboarding.onboardingLaunchAtLoginToggle)
             }
             .toggleStyle(.switch)
 

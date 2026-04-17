@@ -11,13 +11,13 @@ enum RefreshInterval: Int, CaseIterable, Codable, Identifiable, Sendable {
 
     var seconds: TimeInterval { TimeInterval(rawValue) }
 
-    var displayKey: String.LocalizationValue {
+    var displayLabel: LocalizedStringResource {
         switch self {
-        case .oneMinute: "settings.refreshInterval.1m"
-        case .fiveMinutes: "settings.refreshInterval.5m"
-        case .fifteenMinutes: "settings.refreshInterval.15m"
-        case .thirtyMinutes: "settings.refreshInterval.30m"
-        case .oneHour: "settings.refreshInterval.1h"
+        case .oneMinute: .Settings.settingsRefreshInterval1M
+        case .fiveMinutes: .Settings.settingsRefreshInterval5M
+        case .fifteenMinutes: .Settings.settingsRefreshInterval15M
+        case .thirtyMinutes: .Settings.settingsRefreshInterval30M
+        case .oneHour: .Settings.settingsRefreshInterval1H
         }
     }
 }

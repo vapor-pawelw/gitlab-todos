@@ -12,19 +12,19 @@ struct IntegrationSettingsTab: View {
                 LabeledContent {
                     glabPathValue
                 } label: {
-                    Text("settings.integration.glab.path.row", tableName: "Settings")
+                    Text(.Settings.settingsIntegrationGlabPathRow)
                 }
 
                 LabeledContent {
                     hostValue
                 } label: {
-                    Text("settings.integration.host.row", tableName: "Settings")
+                    Text(.Settings.settingsIntegrationHostRow)
                 }
 
                 LabeledContent {
                     authValue
                 } label: {
-                    Text("settings.integration.auth.row", tableName: "Settings")
+                    Text(.Settings.settingsIntegrationAuthRow)
                 }
 
                 HStack {
@@ -35,20 +35,20 @@ struct IntegrationSettingsTab: View {
                             isRechecking = false
                         }
                     } label: {
-                        Text("settings.integration.recheck", tableName: "Settings")
+                        Text(.Settings.settingsIntegrationRecheck)
                     }
                     .disabled(isRechecking)
 
                     Button {
                         openWindow(id: "onboarding")
                     } label: {
-                        Text("settings.integration.runSetupAgain", tableName: "Settings")
+                        Text(.Settings.settingsIntegrationRunSetupAgain)
                     }
                 }
             } header: {
-                Text("settings.integration.glab.section", tableName: "Settings")
+                Text(.Settings.settingsIntegrationGlabSection)
             } footer: {
-                Text("settings.integration.footer", tableName: "Settings")
+                Text(.Settings.settingsIntegrationFooter)
                     .font(.caption)
                     .foregroundStyle(.secondary)
             }
@@ -64,7 +64,7 @@ struct IntegrationSettingsTab: View {
                 .foregroundStyle(.secondary)
                 .textSelection(.enabled)
         } else {
-            Text("settings.integration.glab.notFound", tableName: "Settings")
+            Text(.Settings.settingsIntegrationGlabNotFound)
                 .foregroundStyle(.red)
         }
     }
@@ -77,7 +77,7 @@ struct IntegrationSettingsTab: View {
                 .foregroundStyle(.secondary)
                 .textSelection(.enabled)
         } else {
-            Text("settings.integration.host.unresolved", tableName: "Settings")
+            Text(.Settings.settingsIntegrationHostUnresolved)
                 .foregroundStyle(.secondary)
         }
     }
@@ -86,23 +86,13 @@ struct IntegrationSettingsTab: View {
     private var authValue: some View {
         switch monitor.glab.authStatus {
         case .authenticated:
-            Text(
-                String(
-                    format: String(localized: "settings.integration.auth.authenticated.%@", table: "Settings"),
-                    monitor.glab.currentUsername ?? ""
-                )
-            )
-            .foregroundStyle(.secondary)
+            Text(.Settings.settingsIntegrationAuthAuthenticated(monitor.glab.currentUsername ?? ""))
+                .foregroundStyle(.secondary)
         case .wrongDefaultHost(let hosts):
-            Text(
-                String(
-                    format: String(localized: "settings.integration.auth.wrongHost.%@", table: "Settings"),
-                    hosts.map(\.host).joined(separator: ", ")
-                )
-            )
-            .foregroundStyle(.orange)
+            Text(.Settings.settingsIntegrationAuthWrongHost(hosts.map(\.host).joined(separator: ", ")))
+                .foregroundStyle(.orange)
         case .notAuthenticated, .unknown:
-            Text("settings.integration.auth.notAuthenticated", tableName: "Settings")
+            Text(.Settings.settingsIntegrationAuthNotAuthenticated)
                 .foregroundStyle(.red)
         }
     }

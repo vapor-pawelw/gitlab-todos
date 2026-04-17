@@ -17,7 +17,7 @@ struct TodoRowView: View {
                     .foregroundStyle(.secondary)
             }
             .buttonStyle(.plain)
-            .help(Text("menu.action.markAsDone", tableName: "Menu"))
+            .help(Text(.Menu.menuActionMarkAsDone))
 
             AvatarView(url: todo.author.avatarURL, size: 32)
 
@@ -59,17 +59,17 @@ struct TodoRowView: View {
             Button {
                 onOpen()
             } label: {
-                Text("menu.action.openInBrowser", tableName: "Menu")
+                Text(.Menu.menuActionOpenInBrowser)
             }
             Button(action: onMarkDone) {
-                Text("menu.action.markAsDone", tableName: "Menu")
+                Text(.Menu.menuActionMarkAsDone)
             }
             Divider()
             Button {
                 NSPasteboard.general.clearContents()
                 NSPasteboard.general.setString(todo.targetURL.absoluteString, forType: .string)
             } label: {
-                Text("menu.action.copyURL", tableName: "Menu")
+                Text(.Menu.menuActionCopyURL)
             }
         }
     }

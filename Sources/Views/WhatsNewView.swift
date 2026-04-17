@@ -19,7 +19,7 @@ struct WhatsNewView: View {
                             .textSelection(.enabled)
                             .frame(maxWidth: .infinity, alignment: .leading)
                     } else {
-                        Text("whatsNew.empty", tableName: "Menu")
+                        Text(.Menu.whatsNewEmpty)
                             .foregroundStyle(.secondary)
                     }
                 }
@@ -35,14 +35,9 @@ struct WhatsNewView: View {
 
     private var header: some View {
         VStack(alignment: .leading, spacing: 4) {
-            Text("whatsNew.title", tableName: "Menu")
+            Text(.Menu.whatsNewTitle)
                 .font(.title2.weight(.semibold))
-            Text(
-                String(
-                    format: String(localized: "whatsNew.version.%@", table: "Menu"),
-                    updates.currentVersion
-                )
-            )
+            Text(.Menu.whatsNewVersion(updates.currentVersion))
             .font(.caption)
             .foregroundStyle(.secondary)
             .monospacedDigit()
@@ -57,7 +52,7 @@ struct WhatsNewView: View {
                 updates.acknowledgeCurrentVersion()
                 dismissWindow(id: "whats-new")
             } label: {
-                Text("whatsNew.dismiss", tableName: "Menu")
+                Text(.Menu.whatsNewDismiss)
             }
             .keyboardShortcut(.defaultAction)
         }

@@ -14,7 +14,7 @@ struct ErrorBannerView: View {
                     .foregroundStyle(.primary)
                     .fixedSize(horizontal: false, vertical: true)
                 Button(action: onOpenSetup) {
-                    Text("menu.error.openSetup", tableName: "Menu")
+                    Text(.Menu.menuErrorOpenSetup)
                 }
                 .buttonStyle(.link)
                 .font(.caption)
@@ -34,19 +34,19 @@ struct ErrorBannerView: View {
     private var message: String {
         switch error {
         case .glabNotInstalled:
-            String(localized: "menu.error.glabNotInstalled", table: "Menu")
+            String(localized: .Menu.menuErrorGlabNotInstalled)
         case .notAuthenticated:
-            String(localized: "menu.error.notAuthenticated", table: "Menu")
+            String(localized: .Menu.menuErrorNotAuthenticated)
         case .network(let detail):
-            String(format: String(localized: "menu.error.network.%@", table: "Menu"), detail)
+            String(localized: .Menu.menuErrorNetwork(detail))
         case .decoding(let detail):
-            String(format: String(localized: "menu.error.decoding.%@", table: "Menu"), detail)
+            String(localized: .Menu.menuErrorDecoding(detail))
         case .nonZeroExit(_, let stderr):
-            String(format: String(localized: "menu.error.generic.%@", table: "Menu"), stderr)
+            String(localized: .Menu.menuErrorGeneric(stderr))
         case .timedOut:
-            String(localized: "menu.error.timedOut", table: "Menu")
+            String(localized: .Menu.menuErrorTimedOut)
         case .unknown(let message):
-            String(format: String(localized: "menu.error.generic.%@", table: "Menu"), message)
+            String(localized: .Menu.menuErrorGeneric(message))
         }
     }
 }

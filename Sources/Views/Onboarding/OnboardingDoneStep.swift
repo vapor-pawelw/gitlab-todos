@@ -3,10 +3,10 @@ import SwiftUI
 struct OnboardingDoneStep: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 16) {
-            Text("onboarding.done.title", tableName: "Onboarding")
+            Text(.Onboarding.onboardingDoneTitle)
                 .font(.title3.weight(.semibold))
 
-            Text("onboarding.done.body", tableName: "Onboarding")
+            Text(.Onboarding.onboardingDoneBody)
                 .foregroundStyle(.secondary)
 
             Image(systemName: "checkmark.seal.fill")

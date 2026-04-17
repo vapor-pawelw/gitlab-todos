@@ -24,14 +24,14 @@ enum TargetState: Hashable, Sendable {
         }
     }
 
-    var labelKey: String {
+    var label: LocalizedStringResource? {
         switch self {
-        case .draft: "menu.badge.state.draft"
-        case .open: "menu.badge.state.open"
-        case .merged: "menu.badge.state.merged"
-        case .closed: "menu.badge.state.closed"
-        case .reopened: "menu.badge.state.reopened"
-        case .none: "menu.badge.state.none"
+        case .draft: .Menu.menuBadgeStateDraft
+        case .open: .Menu.menuBadgeStateOpen
+        case .merged: .Menu.menuBadgeStateMerged
+        case .closed: .Menu.menuBadgeStateClosed
+        case .reopened: .Menu.menuBadgeStateReopened
+        case .none: nil
         }
     }
 

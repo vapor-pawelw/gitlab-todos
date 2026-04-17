@@ -12,8 +12,8 @@ struct TodoBadgeView: View {
                 Text(identifier)
                     .font(.caption2.monospaced().weight(.semibold))
             }
-            if state != .none {
-                Text(Self.localized(state.labelKey))
+            if let label = state.label {
+                Text(label)
                     .font(.caption2.weight(.semibold))
             }
         }
@@ -26,9 +26,5 @@ struct TodoBadgeView: View {
                 .stroke(state.tint.opacity(0.35), lineWidth: 0.5)
         }
         .opacity(identifier.isEmpty && state == .none ? 0 : 1)
-    }
-
-    private static func localized(_ key: String) -> String {
-        NSLocalizedString(key, tableName: "Menu", bundle: .main, value: key, comment: "")
     }
 }

@@ -8,7 +8,7 @@ struct SettingsView: View {
             GeneralSettingsTab(monitor: monitor)
                 .tabItem {
                     Label {
-                        Text("settings.general.tab", tableName: "Settings")
+                        Text(.Settings.settingsGeneralTab)
                     } icon: {
                         Image(systemName: "gear")
                     }
@@ -17,7 +17,7 @@ struct SettingsView: View {
             IntegrationSettingsTab(monitor: monitor)
                 .tabItem {
                     Label {
-                        Text("settings.integration.tab", tableName: "Settings")
+                        Text(.Settings.settingsIntegrationTab)
                     } icon: {
                         Image(systemName: "terminal")
                     }

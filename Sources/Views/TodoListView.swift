@@ -54,7 +54,7 @@ struct TodoListView: View {
     private var header: some View {
         HStack(alignment: .firstTextBaseline) {
             VStack(alignment: .leading, spacing: 2) {
-                Text("menu.header.title", tableName: "Menu")
+                Text(.Menu.menuHeaderTitle)
                     .font(.headline)
                 headerSubtitle
                     .font(.caption)
@@ -68,7 +68,7 @@ struct TodoListView: View {
                     Image(systemName: "arrow.up.right.square")
                 }
                 .buttonStyle(.borderless)
-                .help(Text("menu.header.openInBrowser.tooltip", tableName: "Menu"))
+                .help(Text(.Menu.menuHeaderOpenInBrowserTooltip))
 
                 Button {
                     Task { await monitor.refreshNow() }
@@ -83,7 +83,7 @@ struct TodoListView: View {
                         )
                 }
                 .buttonStyle(.borderless)
-                .help(Text("menu.header.refresh.tooltip", tableName: "Menu"))
+                .help(Text(.Menu.menuHeaderRefreshTooltip))
             }
         }
         .padding(.horizontal, 14)
@@ -93,14 +93,9 @@ struct TodoListView: View {
     @ViewBuilder
     private var headerSubtitle: some View {
         if let lastRefresh = monitor.lastRefresh {
-            Text(
-                String(
-                    format: String(localized: "menu.header.updated.%@", table: "Menu"),
-                    RelativeTime.string(from: lastRefresh)
-                )
-            )
+            Text(.Menu.menuHeaderUpdated(RelativeTime.string(from: lastRefresh)))
         } else {
-            Text("menu.header.neverUpdated", tableName: "Menu")
+            Text(.Menu.menuHeaderNeverUpdated)
         }
     }
 
@@ -111,9 +106,9 @@ struct TodoListView: View {
                 Image(systemName: "checkmark.seal")
                     .font(.system(size: 40))
                     .foregroundStyle(.secondary)
-                Text("menu.empty.title", tableName: "Menu")
+                Text(.Menu.menuEmptyTitle)
                     .font(.headline)
-                Text("menu.empty.subtitle", tableName: "Menu")
+                Text(.Menu.menuEmptySubtitle)
                     .font(.caption)
                     .foregroundStyle(.secondary)
             }
@@ -141,19 +136,14 @@ struct TodoListView: View {
 
     private var footer: some View {
         HStack {
-            Text(
-                String(
-                    format: String(localized: "menu.footer.pendingCount.%lld", table: "Menu"),
-                    monitor.visibleTodos.count
-                )
-            )
+            Text(.Menu.menuFooterPendingCount(monitor.visibleTodos.count))
             .font(.caption)
             .foregroundStyle(.secondary)
 
             Spacer()
 
             SettingsLink {
-                Text("menu.action.settings", tableName: "Menu")
+                Text(.Menu.menuActionSettings)
             }
             .buttonStyle(.borderless)
             .font(.caption)
@@ -161,7 +151,7 @@ struct TodoListView: View {
             Button {
                 NSApplication.shared.terminate(nil)
             } label: {
-                Text("menu.action.quit", tableName: "Menu")
+                Text(.Menu.menuActionQuit)
             }
             .buttonStyle(.borderless)
             .font(.caption)

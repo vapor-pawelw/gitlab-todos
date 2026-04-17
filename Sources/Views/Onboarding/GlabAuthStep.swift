@@ -8,7 +8,7 @@ struct GlabAuthStep: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 16) {
-            Text(titleLocalized)
+            Text(title)
                 .font(.title3.weight(.semibold))
 
             bodyContent
@@ -18,7 +18,7 @@ struct GlabAuthStep: View {
                     let terminal = URL(fileURLWithPath: "/System/Applications/Utilities/Terminal.app")
                     NSWorkspace.shared.open(terminal)
                 } label: {
-                    Text("onboarding.auth.openTerminal", tableName: "Onboarding")
+                    Text(.Onboarding.onboardingAuthOpenTerminal)
                 }
 
                 Button {
@@ -28,19 +28,19 @@ struct GlabAuthStep: View {
                         isRechecking = false
                     }
                 } label: {
-                    Text("onboarding.recheck", tableName: "Onboarding")
+                    Text(.Onboarding.onboardingRecheck)
                 }
                 .disabled(isRechecking)
             }
         }
     }
 
-    private var titleLocalized: String {
+    private var title: LocalizedStringResource {
         switch monitor.glab.authStatus {
         case .wrongDefaultHost:
-            String(localized: "onboarding.auth.wrongHost.title", table: "Onboarding")
+            .Onboarding.onboardingAuthWrongHostTitle
         default:
-            String(localized: "onboarding.auth.title", table: "Onboarding")
+            .Onboarding.onboardingAuthTitle
         }
     }
 
@@ -58,18 +58,13 @@ struct GlabAuthStep: View {
 
     private var authenticatedBody: some View {
         VStack(alignment: .leading, spacing: 12) {
-            Text("onboarding.auth.body", tableName: "Onboarding")
+            Text(.Onboarding.onboardingAuthBody)
                 .foregroundStyle(.secondary)
 
             CommandBox(command: "glab auth login")
 
             Label {
-                Text(
-                    String(
-                        format: String(localized: "onboarding.auth.signedIn.%@", table: "Onboarding"),
-                        monitor.glab.currentUsername ?? ""
-                    )
-                )
+                Text(.Onboarding.onboardingAuthSignedIn(monitor.glab.currentUsername ?? ""))
             } icon: {
                 Image(systemName: "checkmark.circle.fill")
                     .foregroundStyle(.green)
@@ -79,13 +74,13 @@ struct GlabAuthStep: View {
 
     private var notAuthenticatedBody: some View {
         VStack(alignment: .leading, spacing: 12) {
-            Text("onboarding.auth.body", tableName: "Onboarding")
+            Text(.Onboarding.onboardingAuthBody)
                 .foregroundStyle(.secondary)
 
             CommandBox(command: "glab auth login")
 
             Label {
-                Text("onboarding.auth.notAuthenticated", tableName: "Onboarding")
+                Text(.Onboarding.onboardingAuthNotAuthenticated)
             } icon: {
                 Image(systemName: "xmark.circle.fill")
                     .foregroundStyle(.red)
@@ -99,29 +94,19 @@ struct GlabAuthStep: View {
         let authedSummary = hosts.map(\.host).joined(separator: ", ")
 
         return VStack(alignment: .leading, spacing: 12) {
-            Text(
-                String(
-                    format: String(localized: "onboarding.auth.wrongHost.body.%@", table: "Onboarding"),
-                    authedSummary
-                )
-            )
-            .foregroundStyle(.secondary)
+            Text(.Onboarding.onboardingAuthWrongHostBody(authedSummary))
+                .foregroundStyle(.secondary)
 
             if !defaultHost.isEmpty {
                 Label {
-                    Text(
-                        String(
-                            format: String(localized: "onboarding.auth.wrongHost.currentDefault.%@", table: "Onboarding"),
-                            defaultHost
-                        )
-                    )
+                    Text(.Onboarding.onboardingAuthWrongHostCurrentDefault(defaultHost))
                 } icon: {
                     Image(systemName: "exclamationmark.triangle.fill")
                         .foregroundStyle(.orange)
                 }
             }
 
-            Text("onboarding.auth.wrongHost.instruction", tableName: "Onboarding")
+            Text(.Onboarding.onboardingAuthWrongHostInstruction)
                 .foregroundStyle(.secondary)
 
             if let primary {

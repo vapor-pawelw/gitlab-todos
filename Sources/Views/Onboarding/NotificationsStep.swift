@@ -9,10 +9,10 @@ struct NotificationsStep: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 16) {
-            Text("onboarding.notifications.title", tableName: "Onboarding")
+            Text(.Onboarding.onboardingNotificationsTitle)
                 .font(.title3.weight(.semibold))
 
-            Text("onboarding.notifications.body", tableName: "Onboarding")
+            Text(.Onboarding.onboardingNotificationsBody)
                 .foregroundStyle(.secondary)
 
             statusView
@@ -27,7 +27,7 @@ struct NotificationsStep: View {
         switch status {
         case .authorized, .provisional, .ephemeral:
             Label {
-                Text("onboarding.notifications.enabled", tableName: "Onboarding")
+                Text(.Onboarding.onboardingNotificationsEnabled)
             } icon: {
                 Image(systemName: "checkmark.circle.fill")
                     .foregroundStyle(.green)
@@ -35,14 +35,14 @@ struct NotificationsStep: View {
 
         case .denied:
             VStack(alignment: .leading, spacing: 10) {
-                Text("onboarding.notifications.denied", tableName: "Onboarding")
+                Text(.Onboarding.onboardingNotificationsDenied)
                     .foregroundStyle(.secondary)
                 Button {
                     if let url = URL(string: "x-apple.systempreferences:com.apple.preference.notifications") {
                         NSWorkspace.shared.open(url)
                     }
                 } label: {
-                    Text("onboarding.notifications.openSystemSettings", tableName: "Onboarding")
+                    Text(.Onboarding.onboardingNotificationsOpenSystemSettings)
                 }
             }
 
@@ -54,7 +54,7 @@ struct NotificationsStep: View {
                     status = await OnboardingDetector.checkNotificationPermission()
                 }
             } label: {
-                Text("onboarding.notifications.enable", tableName: "Onboarding")
+                Text(.Onboarding.onboardingNotificationsEnable)
             }
 
         @unknown default:

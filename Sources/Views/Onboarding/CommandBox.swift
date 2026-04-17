@@ -15,7 +15,7 @@ struct CommandBox: View {
                 NSPasteboard.general.clearContents()
                 NSPasteboard.general.setString(command, forType: .string)
             } label: {
-                Text("onboarding.copy", tableName: "Onboarding")
+                Text(.Onboarding.onboardingCopy)
             }
             .buttonStyle(.borderless)
         }

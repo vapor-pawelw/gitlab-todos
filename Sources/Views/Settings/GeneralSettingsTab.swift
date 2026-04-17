@@ -11,7 +11,7 @@ struct GeneralSettingsTab: View {
         Form {
             Section {
                 Toggle(isOn: $launchAtLogin) {
-                    Text("settings.general.startup.launchAtLogin", tableName: "Settings")
+                    Text(.Settings.settingsGeneralStartupLaunchAtLogin)
                 }
                 .onChange(of: launchAtLogin) { _, newValue in
                     do {
@@ -24,30 +24,30 @@ struct GeneralSettingsTab: View {
                     }
                 }
             } header: {
-                Text("settings.general.startup.section", tableName: "Settings")
+                Text(.Settings.settingsGeneralStartupSection)
             }
 
             Section {
                 Picker(selection: refreshIntervalBinding) {
                     ForEach(RefreshInterval.allCases) { interval in
-                        Text(String(localized: interval.displayKey, table: "Settings"))
+                        Text(interval.displayLabel)
                             .tag(interval)
                     }
                 } label: {
-                    Text("settings.general.refresh.picker", tableName: "Settings")
+                    Text(.Settings.settingsGeneralRefreshPicker)
                 }
             } header: {
-                Text("settings.general.refresh.section", tableName: "Settings")
+                Text(.Settings.settingsGeneralRefreshSection)
             }
 
             Section {
                 Toggle(isOn: notificationsEnabledBinding) {
-                    Text("settings.general.notifications.toggle", tableName: "Settings")
+                    Text(.Settings.settingsGeneralNotificationsToggle)
                 }
 
                 if notificationStatus == .denied {
                     VStack(alignment: .leading, spacing: 6) {
-                        Text("settings.general.notifications.footer.denied", tableName: "Settings")
+                        Text(.Settings.settingsGeneralNotificationsFooterDenied)
                             .font(.caption)
                             .foregroundStyle(.secondary)
                         Button {
@@ -55,12 +55,12 @@ struct GeneralSettingsTab: View {
                                 NSWorkspace.shared.open(url)
                             }
                         } label: {
-                            Text("settings.general.notifications.openSystemSettings", tableName: "Settings")
+                            Text(.Settings.settingsGeneralNotificationsOpenSystemSettings)
                         }
                     }
                 }
             } header: {
-                Text("settings.general.notifications.section", tableName: "Settings")
+                Text(.Settings.settingsGeneralNotificationsSection)
             }
         }
         .formStyle(.grouped)

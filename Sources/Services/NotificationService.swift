@@ -39,10 +39,7 @@ final class NotificationService: NSObject, UNUserNotificationCenterDelegate, @un
         case .individual:
             for todo in newTodos {
                 let content = UNMutableNotificationContent()
-                content.title = String(
-                    localized: "notifications.single.title",
-                    table: "Notifications"
-                )
+                content.title = String(localized: .Notifications.notificationsSingleTitle)
                 content.subtitle = todo.project.pathWithNamespace
                 content.body = todo.displayTitle
                 content.userInfo = ["url": todo.targetURL.absoluteString]
@@ -60,17 +57,8 @@ final class NotificationService: NSObject, UNUserNotificationCenterDelegate, @un
             }
         case .consolidated:
             let content = UNMutableNotificationContent()
-            content.title = String(
-                format: String(
-                    localized: "notifications.batch.title.%lld",
-                    table: "Notifications"
-                ),
-                newTodos.count
-            )
-            content.body = String(
-                localized: "notifications.batch.body",
-                table: "Notifications"
-            )
+            content.title = String(localized: .Notifications.notificationsBatchTitle(newTodos.count))
+            content.body = String(localized: .Notifications.notificationsBatchBody)
             if let dashboardURL {
                 content.userInfo = ["url": dashboardURL.absoluteString]
             }

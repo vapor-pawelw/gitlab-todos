@@ -26,17 +26,11 @@ struct OnboardingShell<Content: View>: View {
 
     private var header: some View {
         HStack {
-            Text("onboarding.title", tableName: "Onboarding")
+            Text(.Onboarding.onboardingTitle)
                 .font(.title2.weight(.semibold))
             Spacer()
             if step != .done {
-                Text(
-                    String(
-                        format: String(localized: "onboarding.step.%1$lld.of.%2$lld", table: "Onboarding"),
-                        step.index,
-                        OnboardingView.Step.totalUserFacing
-                    )
-                )
+                Text(.Onboarding.onboardingStepOf(step.index, OnboardingView.Step.totalUserFacing))
                 .font(.caption)
                 .foregroundStyle(.secondary)
                 .monospacedDigit()
@@ -52,7 +46,7 @@ struct OnboardingShell<Content: View>: View {
                 Button {
                     onBack()
                 } label: {
-                    Text("onboarding.back", tableName: "Onboarding")
+                    Text(.Onboarding.onboardingBack)
                 }
                 .keyboardShortcut(.cancelAction)
             }
@@ -63,19 +57,14 @@ struct OnboardingShell<Content: View>: View {
                 Button {
                     onSkip()
                 } label: {
-                    Text("onboarding.skip", tableName: "Onboarding")
+                    Text(.Onboarding.onboardingSkip)
                 }
             }
 
             Button {
                 onContinue()
             } label: {
-                Text(
-                    step == .done
-                        ? "onboarding.finish"
-                        : "onboarding.continue",
-                    tableName: "Onboarding"
-                )
+                Text(step == .done ? .Onboarding.onboardingFinish : .Onboarding.onboardingContinue)
             }
             .keyboardShortcut(.defaultAction)
             .disabled(!continueEnabled)

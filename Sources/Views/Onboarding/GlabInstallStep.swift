@@ -8,22 +8,17 @@ struct GlabInstallStep: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 16) {
-            Text("onboarding.install.title", tableName: "Onboarding")
+            Text(.Onboarding.onboardingInstallTitle)
                 .font(.title3.weight(.semibold))
 
-            Text("onboarding.install.body", tableName: "Onboarding")
+            Text(.Onboarding.onboardingInstallBody)
                 .foregroundStyle(.secondary)
 
             CommandBox(command: "brew install glab")
 
             if let path = monitor.glab.glabPath?.path {
                 Label {
-                    Text(
-                        String(
-                            format: String(localized: "onboarding.install.foundAt.%@", table: "Onboarding"),
-                            path
-                        )
-                    )
+                    Text(.Onboarding.onboardingInstallFoundAt(path))
                     .font(.caption.monospaced())
                 } icon: {
                     Image(systemName: "checkmark.circle.fill")
@@ -31,7 +26,7 @@ struct GlabInstallStep: View {
                 }
             } else {
                 Label {
-                    Text("onboarding.install.notFound", tableName: "Onboarding")
+                    Text(.Onboarding.onboardingInstallNotFound)
                 } icon: {
                     Image(systemName: "xmark.circle.fill")
                         .foregroundStyle(.red)
@@ -50,7 +45,7 @@ struct GlabInstallStep: View {
                         isRechecking = false
                     }
                 } label: {
-                    Text("onboarding.recheck", tableName: "Onboarding")
+                    Text(.Onboarding.onboardingRecheck)
                 }
                 .disabled(isRechecking)
 
@@ -59,7 +54,7 @@ struct GlabInstallStep: View {
                         NSWorkspace.shared.open(url)
                     }
                 } label: {
-                    Text("onboarding.install.downloadManually", tableName: "Onboarding")
+                    Text(.Onboarding.onboardingInstallDownloadManually)
                 }
                 .buttonStyle(.link)
             }
