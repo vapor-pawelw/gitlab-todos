@@ -5,6 +5,7 @@ struct TodoListView: View {
     @Bindable var monitor: TodoMonitorService
     let updates: UpdateService
     @Environment(\.openWindow) private var openWindow
+    @Environment(\.openSettings) private var openSettings
 
     var body: some View {
         VStack(spacing: 0) {
@@ -142,7 +143,11 @@ struct TodoListView: View {
 
             Spacer()
 
-            SettingsLink {
+            Button {
+                NSApp.activate(ignoringOtherApps: true)
+                openSettings()
+                _ = NSApp.sendAction(Selector(("showSettingsWindow:")), to: nil, from: nil)
+            } label: {
                 Text(.Menu.menuActionSettings)
             }
             .buttonStyle(.borderless)
