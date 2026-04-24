@@ -1,10 +1,11 @@
 <div align="center">
-  <img src="Resources/Assets.xcassets/AppIcon.appiconset/icon_128x128.png" width="128" height="128" alt="GitLab To-Dos icon"/>
 
   # GitLab To-Dos
 
   A macOS menu-bar app that keeps your GitLab to-do inbox one click away.
   Triage assignments, review requests, mentions and pipeline failures without leaving the keyboard.
+
+  <img src="docs/images/menu-bar-icon.png" alt="Menu bar icon with pending count" height="40"/>
 </div>
 
 ## Install
@@ -24,6 +25,10 @@ Requires **macOS 14+** and [**glab**](https://gitlab.com/gitlab-org/cli) authent
 ## Menu bar inbox
 
 The menu-bar icon shows a count of pending to-dos and a small red dot whenever unseen to-dos have arrived since you last opened the dropdown. Clicking it opens a rich dropdown that mirrors the GitLab web todo list: avatar, author name, action description, project path, target title, state badge (Draft / Open / Merged / Closed) and relative time. Click a row to open it in your browser, or use the inline checkbox to mark it as done via the GitLab API — rows disappear immediately and are restored if the call fails.
+
+<p align="center">
+  <img src="docs/images/dropdown.png" alt="Dropdown with three pending to-dos" width="460"/>
+</p>
 
 ## Native notifications
 
