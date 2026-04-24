@@ -22,13 +22,11 @@ struct TodoRowView: View {
             AvatarView(url: todo.author.avatarURL, size: 32)
 
             VStack(alignment: .leading, spacing: 3) {
-                HStack(alignment: .firstTextBaseline, spacing: 6) {
-                    TodoBadgeView(todo: todo)
-                    Text(todo.displayTitle)
-                        .font(.body.weight(.semibold))
-                        .lineLimit(2)
-                        .truncationMode(.tail)
-                }
+                TodoBadgeView(todo: todo)
+                Text(todo.displayTitle)
+                    .font(.body.weight(.semibold))
+                    .lineLimit(2)
+                    .truncationMode(.tail)
 
                 Text(todo.project.pathWithNamespace)
                     .font(.caption)
