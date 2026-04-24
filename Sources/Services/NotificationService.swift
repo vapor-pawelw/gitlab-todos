@@ -35,6 +35,8 @@ final class NotificationService: NSObject, UNUserNotificationCenterDelegate, @un
         guard !newTodos.isEmpty else { return }
         let center = UNUserNotificationCenter.current()
 
+        NSSound(named: "Submarine")?.play()
+
         switch Self.deliveryMode(newCount: newTodos.count) {
         case .individual:
             for todo in newTodos {
@@ -43,7 +45,7 @@ final class NotificationService: NSObject, UNUserNotificationCenterDelegate, @un
                 content.subtitle = todo.project.pathWithNamespace
                 content.body = todo.displayTitle
                 content.userInfo = ["url": todo.targetURL.absoluteString]
-                content.sound = .default
+                content.sound = nil
                 let request = UNNotificationRequest(
                     identifier: "todo-\(todo.id)",
                     content: content,
@@ -83,7 +85,7 @@ final class NotificationService: NSObject, UNUserNotificationCenterDelegate, @un
         willPresent notification: UNNotification,
         withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void
     ) {
-        completionHandler([.banner, .sound])
+        completionHandler([.banner])
     }
 
     func userNotificationCenter(
