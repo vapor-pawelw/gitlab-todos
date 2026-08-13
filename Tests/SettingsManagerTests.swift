@@ -17,6 +17,8 @@ struct SettingsManagerTests {
         let defaults = makeDefaults()
         let settings = SettingsManager(defaults: defaults)
         #expect(settings.refreshInterval == .fiveMinutes)
+        #expect(settings.unreadReminderInterval == .fiveMinutes)
+        #expect(settings.unreadReminderSound == .off)
         #expect(settings.notificationsEnabled == true)
         #expect(settings.onboardingCompleted == false)
         #expect(settings.launchAtLoginPreference == true)
@@ -31,6 +33,8 @@ struct SettingsManagerTests {
         let defaults = makeDefaults()
         let settings = SettingsManager(defaults: defaults)
         settings.refreshInterval = .fifteenMinutes
+        settings.unreadReminderInterval = .thirtyMinutes
+        settings.unreadReminderSound = .ping
         settings.notificationsEnabled = false
         settings.onboardingCompleted = true
         settings.launchAtLoginPreference = false
@@ -41,6 +45,8 @@ struct SettingsManagerTests {
 
         let reloaded = SettingsManager(defaults: defaults)
         #expect(reloaded.refreshInterval == .fifteenMinutes)
+        #expect(reloaded.unreadReminderInterval == .thirtyMinutes)
+        #expect(reloaded.unreadReminderSound == .ping)
         #expect(reloaded.notificationsEnabled == false)
         #expect(reloaded.onboardingCompleted == true)
         #expect(reloaded.launchAtLoginPreference == false)

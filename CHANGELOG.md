@@ -6,7 +6,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ## Unreleased
 
-- _No notable changes yet._
+### General
+
+#### Features
+
+- Added periodic unread to-do reminders, defaulting to every 5 minutes until the menu is opened.
+- Made unseen to-dos more apparent in the menu bar with a pulsing unread indicator.
+- Added an optional reminder sound picker, disabled by default.
 
 ## 1.0.0 - 2026-04-24
 
@@ -25,4 +31,3 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 - Background fetch at app launch so the menu bar count and unseen dot are correct before the user opens the dropdown.
 - Homebrew cask distribution with tag-triggered GitHub Actions release workflow, CHANGELOG-sourced release notes and optional automatic tap update.
 - "What's New" window that surfaces the latest changelog section after an upgrade.
-

@@ -23,6 +23,28 @@
         }
       }
     },
+    "settings.general.notifications.reminderPicker" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Remind about unread to-dos"
+          }
+        }
+      }
+    },
+    "settings.general.notifications.reminderSoundPicker" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reminder sound"
+          }
+        }
+      }
+    },
     "settings.general.notifications.section" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -294,6 +316,72 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Every 5 minutes"
+          }
+        }
+      }
+    },
+    "settings.reminderInterval.15m" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Every 15 minutes"
+          }
+        }
+      }
+    },
+    "settings.reminderInterval.1h" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Every hour"
+          }
+        }
+      }
+    },
+    "settings.reminderInterval.30m" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Every 30 minutes"
+          }
+        }
+      }
+    },
+    "settings.reminderInterval.5m" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Every 5 minutes"
+          }
+        }
+      }
+    },
+    "settings.reminderInterval.off" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Off"
+          }
+        }
+      }
+    },
+    "settings.reminderSound.off" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Off"
           }
         }
       }

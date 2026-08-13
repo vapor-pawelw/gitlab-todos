@@ -45,6 +45,26 @@ struct GeneralSettingsTab: View {
                     Text(.Settings.settingsGeneralNotificationsToggle)
                 }
 
+                Picker(selection: unreadReminderIntervalBinding) {
+                    ForEach(UnreadReminderInterval.allCases) { interval in
+                        Text(interval.displayLabel)
+                            .tag(interval)
+                    }
+                } label: {
+                    Text(.Settings.settingsGeneralNotificationsReminderPicker)
+                }
+                .disabled(!monitor.settings.notificationsEnabled)
+
+                Picker(selection: unreadReminderSoundBinding) {
+                    ForEach(ReminderSound.allCases) { sound in
+                        reminderSoundLabel(sound)
+                            .tag(sound)
+                    }
+                } label: {
+                    Text(.Settings.settingsGeneralNotificationsReminderSoundPicker)
+                }
+                .disabled(!monitor.settings.notificationsEnabled)
+
                 if notificationStatus == .denied {
                     VStack(alignment: .leading, spacing: 6) {
                         Text(.Settings.settingsGeneralNotificationsFooterDenied)
@@ -87,7 +107,38 @@ struct GeneralSettingsTab: View {
             set: { newValue in
                 monitor.settings.notificationsEnabled = newValue
                 monitor.settings.save()
+                monitor.restartUnreadReminderTimer()
             }
         )
+    }
+
+    private var unreadReminderIntervalBinding: Binding<UnreadReminderInterval> {
+        Binding(
+            get: { monitor.settings.unreadReminderInterval },
+            set: { newValue in
+                monitor.settings.unreadReminderInterval = newValue
+                monitor.settings.save()
+                monitor.restartUnreadReminderTimer()
+            }
+        )
+    }
+
+    private var unreadReminderSoundBinding: Binding<ReminderSound> {
+        Binding(
+            get: { monitor.settings.unreadReminderSound },
+            set: { newValue in
+                monitor.settings.unreadReminderSound = newValue
+                monitor.settings.save()
+            }
+        )
+    }
+
+    @ViewBuilder
+    private func reminderSoundLabel(_ sound: ReminderSound) -> some View {
+        if sound == .off {
+            Text(.Settings.settingsReminderSoundOff)
+        } else {
+            Text(sound.rawValue)
+        }
     }
 }

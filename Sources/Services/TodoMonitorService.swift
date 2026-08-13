@@ -15,6 +15,7 @@ final class TodoMonitorService {
 
     private var optimisticallyDone: Set<Int> = []
     private var timer: Timer?
+    private var unreadReminderTimer: Timer?
     private var hasCompletedFirstFetch = false
 
     init(
@@ -90,21 +91,63 @@ final class TodoMonitorService {
                 await self?.refreshNow()
             }
         }
+        restartUnreadReminderTimer()
     }
 
     func stopTimer() {
         timer?.invalidate()
         timer = nil
+        stopUnreadReminderTimer()
     }
 
     func markMenuOpened() {
         settings.lastMenuOpenedAt = Date()
         settings.save()
+        stopUnreadReminderTimer()
+    }
+
+    func restartUnreadReminderTimer() {
+        stopUnreadReminderTimer()
+
+        guard settings.notificationsEnabled,
+              hasUnseenTodos,
+              let interval = settings.unreadReminderInterval.seconds
+        else {
+            return
+        }
+
+        unreadReminderTimer = Timer.scheduledTimer(withTimeInterval: interval, repeats: true) { [weak self] _ in
+            Task { @MainActor in
+                self?.sendUnreadReminderIfNeeded()
+            }
+        }
+    }
+
+    private func stopUnreadReminderTimer() {
+        unreadReminderTimer?.invalidate()
+        unreadReminderTimer = nil
+    }
+
+    private func sendUnreadReminderIfNeeded() {
+        guard settings.notificationsEnabled,
+              hasUnseenTodos,
+              settings.unreadReminderInterval.seconds != nil
+        else {
+            stopUnreadReminderTimer()
+            return
+        }
+
+        notifications.deliverUnreadReminder(
+            todoCount: badgeCount,
+            dashboardURL: dashboardURL,
+            sound: settings.unreadReminderSound
+        )
     }
 
     // MARK: - Commands
 
     func refreshNow() async {
+        guard !isLoading else { return }
         isLoading = true
         defer {
             isLoading = false
@@ -138,6 +181,7 @@ final class TodoMonitorService {
             allTodos = fetchedFiltered
             lastError = nil
             hasCompletedFirstFetch = true
+            restartUnreadReminderTimer()
 
         case .failure(let err):
             Log.monitor.error("Refresh failed: \(String(describing: err), privacy: .public)")
@@ -156,6 +200,7 @@ final class TodoMonitorService {
             optimisticallyDone.remove(todo.id)
             settings.lastSeenTodoIDs.remove(todo.id)
             settings.save()
+            restartUnreadReminderTimer()
         case .failure(let err):
             optimisticallyDone.remove(todo.id)
             lastError = err

@@ -7,6 +7,8 @@ final class SettingsManager {
     private let defaults: UserDefaults
 
     var refreshInterval: RefreshInterval
+    var unreadReminderInterval: UnreadReminderInterval
+    var unreadReminderSound: ReminderSound
     var notificationsEnabled: Bool
     var lastSeenTodoIDs: Set<Int>
     var onboardingCompleted: Bool
@@ -21,6 +23,10 @@ final class SettingsManager {
 
         let rawInterval = defaults.integer(forKey: Key.refreshInterval)
         self.refreshInterval = RefreshInterval(rawValue: rawInterval) ?? .fiveMinutes
+        let rawReminderInterval = defaults.integer(forKey: Key.unreadReminderInterval)
+        self.unreadReminderInterval = UnreadReminderInterval(rawValue: rawReminderInterval) ?? .fiveMinutes
+        let rawReminderSound = defaults.string(forKey: Key.unreadReminderSound) ?? ReminderSound.off.rawValue
+        self.unreadReminderSound = ReminderSound(rawValue: rawReminderSound) ?? .off
         self.notificationsEnabled = defaults.bool(forKey: Key.notificationsEnabled)
         self.onboardingCompleted = defaults.bool(forKey: Key.onboardingCompleted)
         self.launchAtLoginPreference = defaults.bool(forKey: Key.launchAtLoginPreference)
@@ -47,6 +53,8 @@ final class SettingsManager {
 
     func save() {
         defaults.set(refreshInterval.rawValue, forKey: Key.refreshInterval)
+        defaults.set(unreadReminderInterval.rawValue, forKey: Key.unreadReminderInterval)
+        defaults.set(unreadReminderSound.rawValue, forKey: Key.unreadReminderSound)
         defaults.set(notificationsEnabled, forKey: Key.notificationsEnabled)
         defaults.set(onboardingCompleted, forKey: Key.onboardingCompleted)
         defaults.set(launchAtLoginPreference, forKey: Key.launchAtLoginPreference)
@@ -81,6 +89,8 @@ final class SettingsManager {
     private static func registerDefaults(in defaults: UserDefaults) {
         defaults.register(defaults: [
             Key.refreshInterval: RefreshInterval.fiveMinutes.rawValue,
+            Key.unreadReminderInterval: UnreadReminderInterval.fiveMinutes.rawValue,
+            Key.unreadReminderSound: ReminderSound.off.rawValue,
             Key.notificationsEnabled: true,
             Key.onboardingCompleted: false,
             Key.launchAtLoginPreference: true,
@@ -90,6 +100,8 @@ final class SettingsManager {
 
     private enum Key {
         static let refreshInterval = "refreshInterval"
+        static let unreadReminderInterval = "unreadReminderInterval"
+        static let unreadReminderSound = "unreadReminderSound"
         static let notificationsEnabled = "notificationsEnabled"
         static let lastSeenTodoIDs = "lastSeenTodoIDs"
         static let onboardingCompleted = "onboardingCompleted"

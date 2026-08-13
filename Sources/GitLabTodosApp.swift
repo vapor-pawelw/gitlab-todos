@@ -1,47 +1,37 @@
 import SwiftUI
 
+@MainActor
+final class GitLabTodosAppDelegate: NSObject, NSApplicationDelegate {
+    let monitor = TodoMonitorService()
+    let avatarCache = AvatarCache()
+    let updates = UpdateService()
+    private var statusItemController: MenuBarStatusItemController?
+
+    func applicationDidFinishLaunching(_ notification: Notification) {
+        statusItemController = MenuBarStatusItemController(
+            monitor: monitor,
+            updates: updates,
+            avatarCache: avatarCache
+        )
+    }
+}
+
 @main
 struct GitLabTodosApp: App {
-    @State private var monitor = TodoMonitorService()
-    @State private var avatarCache = AvatarCache()
-    @State private var updates = UpdateService()
+    @NSApplicationDelegateAdaptor(GitLabTodosAppDelegate.self) private var appDelegate
 
     var body: some Scene {
-        MenuBarExtra {
-            TodoListView(monitor: monitor, updates: updates)
-                .environment(\.avatarCache, avatarCache)
-        } label: {
-            if monitor.lastError != nil {
-                Image(systemName: "exclamationmark.triangle")
-                Text("\(monitor.badgeCount)")
-            } else if monitor.settings.onboardingCompleted {
-                Image(monitor.badgeCount == 0 ? .todoDoneClear : .todoDone)
-                    .overlay(alignment: .bottomTrailing) {
-                        if monitor.hasUnseenTodos {
-                            Circle()
-                                .fill(.red)
-                                .frame(width: 5, height: 5)
-                                .offset(x: 1, y: 1)
-                        }
-                    }
-                Text("\(monitor.badgeCount)")
-            } else {
-                Image(.todoDone)
-            }
-        }
-        .menuBarExtraStyle(.window)
-
         Settings {
-            SettingsView(monitor: monitor)
+            SettingsView(monitor: appDelegate.monitor)
         }
 
         Window("Setup", id: "onboarding") {
-            OnboardingView(monitor: monitor)
+            OnboardingView(monitor: appDelegate.monitor)
         }
         .windowResizability(.contentSize)
 
         Window("What's New", id: "whats-new") {
-            WhatsNewView(updates: updates)
+            WhatsNewView(updates: appDelegate.updates)
         }
         .windowResizability(.contentSize)
     }

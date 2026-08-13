@@ -23,6 +23,28 @@
         }
       }
     },
+    "notifications.reminder.body" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Open the menu bar app to stop reminders."
+          }
+        }
+      }
+    },
+    "notifications.reminder.title.%lld" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld unread GitLab to-dos"
+          }
+        }
+      }
+    },
     "notifications.single.title" : {
       "extractionState" : "manual",
       "localizations" : {

@@ -3,6 +3,8 @@ import Foundation
 import UserNotifications
 
 final class NotificationService: NSObject, UNUserNotificationCenterDelegate, @unchecked Sendable {
+    private static let unreadReminderIdentifier = "todo-unread-reminder"
+
     enum DeliveryMode: Equatable {
         case individual
         case consolidated
@@ -74,6 +76,35 @@ final class NotificationService: NSObject, UNUserNotificationCenterDelegate, @un
                 if let error {
                     Log.notifications.error("Failed to post batch: \(error.localizedDescription, privacy: .public)")
                 }
+            }
+        }
+    }
+
+    func deliverUnreadReminder(todoCount: Int, dashboardURL: URL?, sound: ReminderSound) {
+        guard todoCount > 0 else { return }
+        let center = UNUserNotificationCenter.current()
+        if let soundName = sound.soundName {
+            NSSound(named: soundName)?.play()
+        }
+
+        let content = UNMutableNotificationContent()
+        content.title = String(localized: .Notifications.notificationsReminderTitle(todoCount))
+        content.body = String(localized: .Notifications.notificationsReminderBody)
+        if let dashboardURL {
+            content.userInfo = ["url": dashboardURL.absoluteString]
+        }
+        content.sound = nil
+
+        let request = UNNotificationRequest(
+            identifier: Self.unreadReminderIdentifier,
+            content: content,
+            trigger: nil
+        )
+
+        center.removeDeliveredNotifications(withIdentifiers: [Self.unreadReminderIdentifier])
+        center.add(request) { error in
+            if let error {
+                Log.notifications.error("Failed to post unread reminder: \(error.localizedDescription, privacy: .public)")
             }
         }
     }
