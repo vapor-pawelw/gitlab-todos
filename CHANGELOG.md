@@ -6,6 +6,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ## Unreleased
 
+- _No notable changes yet._
+
+## 1.1.0 - 2026-08-13
+
+
 ### General
 
 #### Features
@@ -17,6 +22,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 #### Bug Fixes
 
 - Prevented concurrent or timed-out `glab` commands from accumulating and exhausting system memory.
+
 
 ## 1.0.0 - 2026-04-24
 
