@@ -14,6 +14,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 - Made unseen to-dos more apparent in the menu bar with a pulsing unread indicator.
 - Added an optional reminder sound picker, disabled by default.
 
+#### Bug Fixes
+
+- Prevented concurrent or timed-out `glab` commands from accumulating and exhausting system memory.
+
 ## 1.0.0 - 2026-04-24
 
 
